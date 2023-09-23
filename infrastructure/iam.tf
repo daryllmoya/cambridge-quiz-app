@@ -1,3 +1,39 @@
+resource "aws_ecr_repository_policy" "cambridge_quiz_app_erc_policy" {
+  repository = aws_ecr_repository.cambridge_quiz_app.name
+
+  policy = jsonencode({
+    Version = "2008-10-17",
+    Statement = [
+      {
+        Sid    = "AppRunnerPullImages"
+        Effect = "Allow",
+        Principal = {
+          Service = "build.apprunner.amazonaws.com"
+        },
+        Action = [
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchGetImage",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:GetAuthorizationToken"
+        ]
+      },
+      {
+        Sid    = "AppRunnerTasks"
+        Effect = "Allow",
+        Principal = {
+          Service = "tasks.apprunner.amazonaws.com"
+        },
+        Action = [
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchGetImage",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:GetAuthorizationToken"
+        ]
+      }
+    ]
+  })
+}
+
 # CodeBuild Service Role
 resource "aws_iam_role" "codebuild_role" {
   name        = "CodeBuildServiceRole"
@@ -53,11 +89,17 @@ resource "aws_iam_role_policy" "codebuild_policy" {
         ],
         Effect   = "Allow",
         Resource = "arn:aws:logs:*:*:log-group:/aws/codebuild/*"
+      },
+      {
+        Action = [
+          "ecr:GetAuthorizationToken"
+        ],
+        Effect   = "Allow",
+        Resource = "*"
       }
     ]
   })
 }
-
 
 # AppRunner Service Role
 resource "aws_iam_role" "apprunner_role" {
@@ -76,7 +118,14 @@ resource "aws_iam_role" "apprunner_role" {
         Action = "sts:AssumeRole",
         Effect = "Allow",
         Principal = {
-          Service = "apprunner.amazonaws.com"
+          Service = "build.apprunner.amazonaws.com"
+        }
+      },
+      {
+        Action = "sts:AssumeRole",
+        Effect = "Allow",
+        Principal = {
+          Service = "tasks.apprunner.amazonaws.com"
         }
       }
     ]
@@ -99,6 +148,13 @@ resource "aws_iam_role_policy" "apprunner_policy" {
         ],
         Effect   = "Allow",
         Resource = aws_ecr_repository.cambridge_quiz_app.arn
+      },
+      {
+        Action = [
+          "ecr:GetAuthorizationToken"
+        ],
+        Effect   = "Allow",
+        Resource = "*"
       }
     ]
   })

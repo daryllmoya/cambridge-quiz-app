@@ -5,5 +5,5 @@ output "ecr_repository_url" {
 
 output "apprunner_service_url" {
   description = "App Runner Service URL"
-  value       = aws_apprunner_service.cambridge_quiz_app_service.service_url
+  value       = aws_apprunner_service.cambridge_quiz_app_apprunner.service_url
 }

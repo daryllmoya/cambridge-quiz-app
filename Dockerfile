@@ -23,5 +23,6 @@ WORKDIR /app
 # Copy the built app from the previous stage
 COPY --from=build /app/.output ./.output
 
-# Set the command to run your app using `npm start` which should be defined in your package.json scripts
-CMD ["npm", "run", "prod"]
+EXPOSE 3000 
+
+CMD ["node", ".output/server/index.mjs"]

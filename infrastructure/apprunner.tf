@@ -1,5 +1,5 @@
-resource "aws_apprunner_service" "cambridge_quiz_app_service" {
-  service_name = "CambridgeQuizAppService"
+resource "aws_apprunner_service" "cambridge_quiz_app_apprunner" {
+  service_name = "CambridgeQuizAppAppRunner"
 
   source_configuration {
     authentication_configuration {
