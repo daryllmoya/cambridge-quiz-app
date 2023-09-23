@@ -1,0 +1,23 @@
+version: 0.2
+
+env:
+  variables:
+    REPOSITORY_URI: "613202595786.dkr.ecr.ap-southeast-1.amazonaws.com/cambridge-quiz-app-repo"
+    IMAGE_TAG: "latest"
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
+
+  build:
+    commands:
+      - echo Building Docker image...
+      - docker build -t $REPOSITORY_URI:$IMAGE_TAG .
+
+  post_build:
+    commands:
+      - echo Pushing Docker image to ECR...
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+
