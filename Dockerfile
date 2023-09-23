@@ -21,13 +21,7 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Copy the built app from the previous stage
-COPY --from=build /app/.nuxt ./.nuxt
-COPY --from=build /app/static ./static
-COPY --from=build /app/nuxt.config.js .
-COPY --from=build /app/package*.json ./
-
-# Install only runtime dependencies
-RUN npm install --production
+COPY --from=build /app/.output ./.output
 
 # Set the command to run your app using `npm start` which should be defined in your package.json scripts
-CMD ["npm", "start"]
+CMD ["npm", "run", "prod"]
