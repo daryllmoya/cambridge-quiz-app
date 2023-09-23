@@ -8,4 +8,7 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  server: {
+    host: "0.0.0.0",
+  },
 });
